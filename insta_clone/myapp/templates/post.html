@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<head>
+    <title>Post</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}" >
+    <script>
+    {% if error %}
+        alert("{{error}}");
+        if( "{{error}}" == "Post Added"){
+            window.location.href = "/feed/";}
+        if( "{{error}}" == "Post Added with 1 points"){
+            window.location.href = "/feed/";}
+    {% endif %}
+    </script>
+</head>
+
+<body>
+
+    <div class="w3-bar w3-teal">
+        <h2 class="w3-center">Instagram</h2>
+    </div>
+    <div class="w3-bar w3-grey">
+        <a href="/feed/" class="w3-bar-item w3-button">Home</a>
+        <a href="/self/" class="w3-bar-item w3-button">{{user.name}}</a>
+        <a href="/post/" class="w3-bar-item w3-button">Add new Post</a>
+        <a href="/points/" class="w3-bar-item w3-button">Points</a>
+        <a href="/logout/" class="w3-bar-item w3-button w3-right">Logout</a>
+    </div><br><br>
+
+    <div class="w3-card-4 w3-margin w3-display-middle w3-half" style="max-width:600px">
+        <div class="w3-container w3-teal">
+            <h2>Upload Media</h2>
+        </div>
+        <form name="myform" class="w3-container w3-margin" enctype="multipart/form-data" method="post" onsubmit="return validateLoginForm()"><br>
+            {% csrf_token %}
+            <input class="" name="image" type="file" style="margin-left:5px" value={{ image }}> <br><br>
+            <input class="w3-input" name="caption" type="text" placeholder="Caption" size="30" value={{ caption }}><br>
+            <input class="w3-btn w3-ripple w3-teal " type="submit"  value="Add Image"><br><br>
+        </form>
+    </div>
+
+</body>
+
+</html>

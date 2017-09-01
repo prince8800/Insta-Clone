@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+
+<html>
+<title>Feed</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}" >
+
+<body>
+
+
+
+    <div class="w3-bar w3-teal">
+        <h2 class="w3-center">Insta Clone</h2>
+    </div>
+    <div class="w3-bar w3-grey">
+        <a href="/feed/" class="w3-bar-item w3-button">Home</a>
+        <a href="/self/" class="w3-bar-item w3-button">{{user.name}}</a>
+        <a href="/post/" class="w3-bar-item w3-button">Add new Post</a>
+        <a href="/points/" class="w3-bar-item w3-button">Your Points</a>
+        <a href="/logout/" class="w3-bar-item w3-button w3-right">Logout</a>
+    </div><br><br>
+
+    {% for post in posts %}
+    <div class="w3-container w3-margin">
+        <div class="w3-container">
+            <h2>{{ post.user.username}}</h2>
+            <h4>{{ post.caption}}</h4>
+        </div>
+        <div class="w3-container w3-half" >
+  	        <div class="w3-card-4">
+                <img src="{{post.image_url}}" class="w3-round" alt="Image" style="width:100%">
+  	        </div><br>
+            <div>
+                <form method="POST" action="/like/" align="left">
+                    {% csrf_token %}
+                    <input type="hidden" name="post" value="{{ post.id }}">
+                    {% if post.has_liked %}
+                        <input type="submit" class="w3-btn w3-blue" value="Liked">
+                    {% else %}
+                        <input type="submit" class="w3-btn w3-text-blue w3-border w3-border-blue" value="Like">
+                    {% endif %}
+                    <label class="w3-text-blue w3-right" style="margin:8px">{{ post.like_count }}</label>
+                </form>
+
+            </div>
+        </div>
+        <div class="w3-container w3-half">
+            <div>
+                {% for comment in post.comments %}
+                    <div class="w3-row " style="margin: 8px 0px">
+                        <form method="POST" action="/upvote/" align="left">
+                            {% csrf_token %}
+                            <input type="hidden" name="comment" value="{{ comment.id }}">
+                            {% if comment.has_comment_liked %}
+                                <div class="w3-col" style="width:75px"><input type="submit" class="w3-button w3-blue" value="{{comment.like_count}}"></div>
+                            {% else %}
+                                <div class="w3-col" style="width:75px"><input type="submit" class="w3-button w3-text-blue w3-border w3-border-blue" value="{{comment.like_count}}"></div>
+                            {% endif %}
+                        </form>
+                        <div class="w3-rest" style="margin-top:8px"> <b>{{ comment.user.username }}:</b> {{ comment.comment_text }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+            <form method="POST" action="/comment/">
+                {% csrf_token %}
+                <input type="hidden" name="post" value="{{ post.id }}" >
+                <input class="w3-input" type="text" name="comment_text" placeholder="Comments" value="{{ comment_text }}"><br>
+            </form>
+        </div>
+    </div><br><hr><br>
+    {% endfor %}
+
+</body>
+</html>
